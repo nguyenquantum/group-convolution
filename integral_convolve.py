@@ -135,7 +135,8 @@ def plot_solution():
         kappa = np.max(np.abs(eigs))/np.min(np.abs(eigs))
         print("n = " + str(n))
         print("Condition number = " + str(np.round(kappa,4)))
-        print("Minimum singular value magnitude  = "np.min(np.abs(eigs)))
+        print("Maximum singular value magnitude  = " + str(np.max(np.abs(eigs))))
+        print("Minimum singular value magnitude  = " + str(np.min(np.abs(eigs))))
 
         f_vec = discretized_f(n)
         err.append(np.mean(np.abs(sol-f_vec)))
@@ -226,7 +227,7 @@ def plot_error():
     plt.plot(ns,yfit(ns), "--", color = 'grey')
     plt.yscale("log")
     plt.xscale("log")
-    plt.text(10,0.0005, rf"${a} \log n {b}$", fontsize = 10)
+    plt.text(10, err[1], rf"${a} \log n {b}$", fontsize = 10)
     plt.xlabel(r"$n$", fontsize= 10)
     plt.ylabel(r"$\frac{\Vert\mathbf{f}-f(\mathbf{t})\Vert_1}{n^2}$", fontsize=13, labelpad=0.01)
     # plt.show()
@@ -234,7 +235,7 @@ def plot_error():
 
 
 if __name__ == "__main__":
-    plot_error()
+    plot_solution()
 
 
 
