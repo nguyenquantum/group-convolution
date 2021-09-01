@@ -114,29 +114,28 @@ def discretized_g(lamb, N):
 def plot_solution():
     kernel = exp_kernel
     lamb = 1
-    fig = plt.figure(figsize=(10.3,7))
+    fig = plt.figure(figsize=(8.2,2.3))
     err = []   
 
-    for index, n in enumerate([4,8,16,32]):
-            
-        reps = get_cyclic_product_reps(n)
-        filter = get_filter(n, kernel, lamb)
-        approx = np.zeros([n**2, n**2])
-        for i in range(n**2):
-            approx = approx + filter[i]*reps[i]
+    for index, n in enumerate([4,16,64]):
+        ######### Verifying the matrix is indeed a group cross-correlation    
+        # reps = get_cyclic_product_reps(n)
+        # filter = get_filter(n, kernel, lamb)
+        # approx = np.zeros([n**2, n**2])
+        # for i in range(n**2):
+        #    approx = approx + filter[i]*reps[i]
 
-        # A = cross_correlation(n, kernel, lamb)
+        A = cross_correlation(n, kernel, lamb)
         # print(np.linalg.norm(approx-A, ord='fro')/(n**4))
 
         g_vec = discretized_g(lamb, n)
-        sol = np.reshape(np.linalg.inv(approx)@np.array([g_vec]).T,-1)
+        sol = np.reshape(np.linalg.inv(A)@np.array([g_vec]).T,-1)
 
-        eigs, _ = np.linalg.eig(approx)
+        eigs, _ = np.linalg.eig(A)
         kappa = np.max(np.abs(eigs))/np.min(np.abs(eigs))
         print("n = " + str(n))
         print("Condition number = " + str(np.round(kappa,4)))
-        # eigs, _ = np.linalg.eig(A)
-        # print(np.max(np.abs(eigs)))
+        print("Minimum singular value magnitude  = "np.min(np.abs(eigs)))
 
         f_vec = discretized_f(n)
         err.append(np.mean(np.abs(sol-f_vec)))
@@ -146,13 +145,14 @@ def plot_solution():
         ys = np.tile(1/n*np.array(list(range(n))),n)
         
 
-        ax = fig.add_subplot(2, 2, index+1, projection='3d')
+        ax = fig.add_subplot(1, 3, index+1, projection='3d')
         ax.grid(False)
         ax.xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-
-        ax.scatter(xs, ys, sol, c=sol, label = "approx",cmap='autumn', marker= ".", alpha = 0.99, s=3)  
+        
+        dot_size = 32/n
+        ax.scatter(xs, ys, sol, c=sol, label = "approx",cmap='autumn', marker= ".", alpha = 0.99, s=dot_size)  
 
         N1 = 1000
         X,Y = np.meshgrid(1/N1*np.array(list(range(N1))), 1/N1*np.array(list(range(N1))))
@@ -192,27 +192,27 @@ def plot_solution():
 def plot_error():
     kernel = exp_kernel
     lamb = 1
-    fig = plt.figure(figsize=(6,4))
+    fig = plt.figure(figsize=(5.2,3.5))
     err = []   
-    ns = np.array(range(4,34,4))
+    ns = np.array([4,8,16,32,64])
     for index, n in enumerate(ns):
-        reps = get_cyclic_product_reps(n)
-        filter = get_filter(n, kernel, lamb)
-        approx = np.zeros([n**2, n**2])
-        for i in range(n**2):
-            approx = approx + filter[i]*reps[i]
+        ######### Verifying the matrix is indeed a group cross-correlation    
+        # reps = get_cyclic_product_reps(n)
+        # filter = get_filter(n, kernel, lamb)
+        # approx = np.zeros([n**2, n**2])
+        # for i in range(n**2):
+        #    approx = approx + filter[i]*reps[i]
 
-        # A = cross_correlation(n, kernel, lamb)
+        A = cross_correlation(n, kernel, lamb)
         # print(np.linalg.norm(approx-A, ord='fro')/(n**4))
 
         g_vec = discretized_g(lamb, n)
-        sol = np.reshape(np.linalg.inv(approx)@np.array([g_vec]).T,-1)
+        sol = np.reshape(np.linalg.inv(A)@np.array([g_vec]).T,-1)
 
-        eigs, _ = np.linalg.eig(approx)
+        eigs, _ = np.linalg.eig(A)
         kappa = np.max(np.abs(eigs))/np.min(np.abs(eigs))
         print("n = " + str(n))
         print("Condition number = " + str(np.round(kappa,4)))
-        # eigs, _ = np.linalg.eig(A)
         # print(np.max(np.abs(eigs)))
 
         f_vec = discretized_f(n)
@@ -234,7 +234,7 @@ def plot_error():
 
 
 if __name__ == "__main__":
-    plot_solution()
+    plot_error()
 
 
 
